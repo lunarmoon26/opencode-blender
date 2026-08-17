@@ -6,7 +6,9 @@
   with Blender's NUL-delimited TCP bridge at `127.0.0.1:9876`.
 - The bridge accepts only `execute` requests. It runs the supplied Python in
   Blender and requires a JSON-serializable dictionary assigned to `result`.
-- The plugin exposes one native `blender` tool with a `code` argument.
+- The plugin exposes a native `blender` tool with a `code` argument and a
+  `polyhaven` tool for first-party Poly Haven search, download, import, HDRI,
+  and PBR material workflows.
 - `skills/*/SKILL.md` contains adapted Blender workflow skills. They invoke
   the native `blender` tool and must preserve its `result` contract.
 

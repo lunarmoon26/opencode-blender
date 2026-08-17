@@ -9,7 +9,8 @@ Native OpenCode plugin and focused skill for Blender's local MCP extension.
 
 The Blender extension exposes a NUL-delimited TCP protocol rather than a
 standard HTTP MCP endpoint. This plugin adapts its `execute` operation into an
-OpenCode-native `blender` tool.
+OpenCode-native `blender` tool. It also provides a `polyhaven` tool for
+first-party asset search, download, import, HDRI, and PBR material workflows.
 
 ## Install Blender's MCP bridge
 
@@ -88,9 +89,17 @@ Adapted from the local `blender-skills` workflows:
 - `image-to-3d`, `multi-image-to-3d`
 - `turntable`, `slow-zoom`, `dolly-rotate`, `crane-shot`
 - `dynamic-full-loop`, `perfect-loop`
+- `polyhaven-scene-builder`, `polyhaven-texture-apply`,
+  `polyhaven-hdri-showcase`, `polyhaven-material-swap`,
+  `polyhaven-studio-setup`
+- `blender-product-polish`, `blender-threejs-export`, `blender-toolkit`
 
 The image-to-3D skills require `MESHY_API_KEY`. The animation skills require
 `ffmpeg` when encoding the rendered PNG sequence into a video.
+
+The `polyhaven` tool uses the public [Poly Haven API](https://polyhaven.com/our-api)
+with its required unique User-Agent and reports Poly Haven as every asset's
+source. Poly Haven assets are CC0; the live API requires clear attribution.
 
 ## License
 
