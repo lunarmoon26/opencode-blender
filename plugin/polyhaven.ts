@@ -785,71 +785,95 @@ export function polyhavenTool() {
       create_camera: tool.schema.boolean().default(false).describe("Allow material_swap or hdri_showcase to add a camera if the scene has none."),
     },
     execute: async (args, context) => {
+      const options = {
+        action: args.action,
+        asset: args.asset ?? "",
+        query: args.query ?? "",
+        assetType: args.asset_type ?? "all",
+        object: args.object ?? "",
+        resolution: args.resolution ?? "2k",
+        scale: args.scale || 1,
+        hdri: args.hdri ?? "",
+        ground: args.ground ?? "",
+        groundSize: args.ground_size || 10,
+        strength: args.strength || 1,
+        rotation: args.rotation ?? 0,
+        preset: args.preset ?? "",
+        pedestal: args.pedestal ?? false,
+        pedestalTexture: args.pedestal_texture ?? "",
+        props: args.props ?? "",
+        assets: args.assets ?? "",
+        output: args.output ?? "",
+        renderWidth: args.render_width || 1920,
+        renderHeight: args.render_height || 1080,
+        samples: args.samples || 64,
+        createCamera: args.create_camera ?? false,
+      }
       try {
-        context.metadata({ title: `Poly Haven: ${args.action}`, metadata: { action: args.action, asset: args.asset } })
-        const resolution = normalizeResolution(args.resolution)
+        context.metadata({ title: `Poly Haven: ${options.action}`, metadata: { action: options.action, asset: options.asset } })
+        const resolution = normalizeResolution(options.resolution)
         let result: Record<string, unknown>
-        if (args.action === "search") result = await search(args.query, args.asset_type)
-        else if (args.action === "apply_hdri") {
+        if (options.action === "search") result = await search(options.query, options.assetType)
+        else if (options.action === "apply_hdri") {
           result = await applyHdri(
-            requireAssetId(args.asset),
+            requireAssetId(options.asset),
             resolution,
-            requireNumberInRange("strength", args.strength, 0, 100),
-            requireNumberInRange("rotation", args.rotation, -36000, 36000),
+            requireNumberInRange("strength", options.strength, 0, 100),
+            requireNumberInRange("rotation", options.rotation, -36000, 36000),
           )
         }
-        else if (args.action === "apply_texture") {
-          if (!args.object) throw new Error("apply_texture requires an object name")
-          result = await applyTexture(requireAssetId(args.asset), args.object, resolution, requirePositiveNumber("scale", args.scale, 100))
-        } else if (args.action === "import_model") result = await importModel(requireAssetId(args.asset), resolution)
-        else if (args.action === "studio_setup") {
+        else if (options.action === "apply_texture") {
+          if (!options.object) throw new Error("apply_texture requires an object name")
+          result = await applyTexture(requireAssetId(options.asset), options.object, resolution, requirePositiveNumber("scale", options.scale, 100))
+        } else if (options.action === "import_model") result = await importModel(requireAssetId(options.asset), resolution)
+        else if (options.action === "studio_setup") {
           result = await studioSetup(
-            requireAssetId(args.hdri || args.asset || "studio_small_09"),
-            args.ground ? requireAssetId(args.ground) : "",
+            requireAssetId(options.hdri || options.asset || "studio_small_09"),
+            options.ground ? requireAssetId(options.ground) : "",
             resolution,
-            requireNumberInRange("strength", args.strength, 0, 100),
-            requireNumberInRange("rotation", args.rotation, -36000, 36000),
-            requirePositiveNumber("ground_size", args.ground_size, 10000),
+            requireNumberInRange("strength", options.strength, 0, 100),
+            requireNumberInRange("rotation", options.rotation, -36000, 36000),
+            requirePositiveNumber("ground_size", options.groundSize, 10000),
           )
-        } else if (args.action === "scene_builder") {
+        } else if (options.action === "scene_builder") {
           result = await buildScene(
-            args.preset,
-            args.hdri || args.asset,
-            args.ground,
-            args.pedestal,
-            args.pedestal_texture,
-            args.props,
-            args.object,
+            options.preset,
+            options.hdri || options.asset,
+            options.ground,
+            options.pedestal,
+            options.pedestalTexture,
+            options.props,
+            options.object,
             resolution,
           )
-        } else if (args.action === "material_swap") {
+        } else if (options.action === "material_swap") {
           result = await materialSwap(
-            args.object,
-            args.assets,
-            args.output,
+            options.object,
+            options.assets,
+            options.output,
             resolution,
-            requirePositiveNumber("scale", args.scale, 100),
-            requirePositiveInteger("render_width", args.render_width, 16384),
-            requirePositiveInteger("render_height", args.render_height, 16384),
-            requirePositiveInteger("samples", args.samples, 4096),
-            args.create_camera,
+            requirePositiveNumber("scale", options.scale, 100),
+            requirePositiveInteger("render_width", options.renderWidth, 16384),
+            requirePositiveInteger("render_height", options.renderHeight, 16384),
+            requirePositiveInteger("samples", options.samples, 4096),
+            options.createCamera,
           )
-        } else if (args.action === "hdri_showcase") {
+        } else if (options.action === "hdri_showcase") {
           result = await hdriShowcase(
-            args.assets,
-            args.preset,
-            args.output,
+            options.assets,
+            options.preset,
+            options.output,
             resolution,
-            requirePositiveInteger("render_width", args.render_width, 16384),
-            requirePositiveInteger("render_height", args.render_height, 16384),
-            requirePositiveInteger("samples", args.samples, 4096),
-            args.create_camera,
+            requirePositiveInteger("render_width", options.renderWidth, 16384),
+            requirePositiveInteger("render_height", options.renderHeight, 16384),
+            requirePositiveInteger("samples", options.samples, 4096),
+            options.createCamera,
           )
         }
         else throw new Error("Unknown Poly Haven action")
-        return { title: `Poly Haven: ${args.action}`, output: JSON.stringify(result, null, 2) }
+        return { title: `Poly Haven: ${options.action}`, output: JSON.stringify(result, null, 2) }
       } catch (error) {
-        return { title: `Poly Haven: ${args.action}`, output: `Poly Haven call failed: ${errorMessage(error)}` }
+        return { title: `Poly Haven: ${options.action}`, output: `Poly Haven call failed: ${errorMessage(error)}` }
       }
     },
   })
