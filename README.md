@@ -24,9 +24,14 @@ Server](https://www.blender.org/lab/mcp-server/) extension.
    `.zip` package into Blender. If you download it, use **Install from Disk**
    in Blender's Extensions preferences.
 2. Enable the extension, open its preferences, and click **Start MCP Bridge
-   Server**. It listens on `127.0.0.1:9876` by default; this plugin uses that
-   bridge directly.
+Server**. It listens on `127.0.0.1:9876` by default; this plugin uses that
+bridge directly.
 3. Keep Blender running while using the OpenCode `blender` tool.
+
+To connect to a trusted non-default bridge, set `BLENDER_HOST` and
+`BLENDER_PORT` in OpenCode's environment before it starts. `BLENDER_PORT` must
+be an integer from 1 through 65535. Do not expose Blender's bridge to an
+untrusted network.
 
 Blender's bridge executes generated Python without sandboxing. Use it only
 with a trusted model and Blender file; do not expose port 9876 beyond your
@@ -90,6 +95,19 @@ Comparison actions require an absolute empty output directory, refuse to
 overwrite PNGs, and restore their temporary render/world or material state.
 `threejs_export` exports the current selection to GLB and creates a responsive
 viewer without overwriting existing output files.
+
+For focused read-only inspection, use `blender_status`, `blender_scene_info`,
+or `blender_object_info` before falling back to arbitrary Python.
+
+## Test
+
+```bash
+bun test
+```
+
+The tests cover TCP framing and bridge configuration, standalone viewer
+generation, and Poly Haven's omitted-option handling. They do not require
+Blender to be running.
 
 ## Included skills
 

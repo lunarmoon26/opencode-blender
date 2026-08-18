@@ -1,7 +1,19 @@
 import { Buffer } from "node:buffer"
 import net from "node:net"
 
-export const blenderBridge = { host: "127.0.0.1", port: 9876 }
+export type BlenderBridge = { host: string; port: number }
+
+export function resolveBlenderBridge(environment = process.env): BlenderBridge {
+  const host = environment.BLENDER_HOST?.trim() || "127.0.0.1"
+  const configuredPort = environment.BLENDER_PORT
+  if (!configuredPort) return { host, port: 9876 }
+  if (!/^[1-9]\d{0,4}$/.test(configuredPort)) throw new Error("BLENDER_PORT must be an integer between 1 and 65535")
+  const port = Number(configuredPort)
+  if (port > 65535) throw new Error("BLENDER_PORT must be an integer between 1 and 65535")
+  return { host, port }
+}
+
+export const blenderBridge = resolveBlenderBridge()
 
 const timeoutMs = 15_000
 const maxResponseBytes = 10 * 1024 * 1024
@@ -14,9 +26,9 @@ export type BridgeResponse = {
   stderr?: string
 }
 
-export function executeBlenderCode(code: string): Promise<BridgeResponse> {
+export function executeBlenderCode(code: string, bridge: BlenderBridge = blenderBridge): Promise<BridgeResponse> {
   return new Promise((resolve, reject) => {
-    const socket = net.createConnection(blenderBridge)
+    const socket = net.createConnection(bridge)
     let responseBuffer = Buffer.alloc(0)
     let settled = false
 
