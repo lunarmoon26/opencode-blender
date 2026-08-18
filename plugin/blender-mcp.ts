@@ -1,6 +1,7 @@
 import { tool, type Plugin } from "@opencode-ai/plugin"
 import { blenderBridge, executeBlenderCode } from "./bridge"
 import { polyhavenTool } from "./polyhaven"
+import { threeJsExportTool } from "./threejs"
 
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error)
@@ -27,5 +28,6 @@ export default (async () => ({
       },
     }),
     polyhaven: polyhavenTool(),
+    threejs_export: threeJsExportTool(),
   },
 })) satisfies Plugin

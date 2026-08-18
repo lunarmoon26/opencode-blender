@@ -6,25 +6,11 @@ description: Compare a Blender product under several Poly Haven HDRIs. Use when 
 # Poly Haven HDRI Showcase
 
 Use `polyhaven` `action: "search"` with `asset_type: "hdri"` to choose a small
-set of environments. Before changing the world, query and retain the current
-world image path or confirm that restoring the original environment is not
-needed.
+approved set. Then use `action: "hdri_showcase"` with an absolute empty output
+directory, comma-separated `assets` or a `studios`, `outdoor`, `dramatic`, or
+`all` preset, resolution, render dimensions, and samples.
 
-For each approved HDRI:
-
-1. Apply it using `polyhaven` `action: "apply_hdri"`.
-2. Set a unique, approved PNG output path with `blender`.
-3. Render only after confirming engine, resolution, samples, and overwrite
-   behavior.
-
-```python
-import bpy
-
-scene = bpy.context.scene
-scene.render.filepath = "/absolute/output/path/environment.png"
-bpy.ops.render.render(write_still=True)
-result = {"render": scene.render.filepath}
-```
-
-Restore the saved environment when requested. Attribute all selected HDRIs to
-Poly Haven.
+The tool refuses to overwrite PNGs, requires an active camera unless
+`create_camera` is approved, uses temporary world data for the comparison, and
+restores the original world and render settings afterward. Attribute every HDRI
+and render to Poly Haven.

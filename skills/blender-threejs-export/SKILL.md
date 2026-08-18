@@ -5,28 +5,21 @@ description: Export approved Blender meshes to GLB and create a Three.js viewer.
 
 # Blender Three.js Export
 
-Confirm the output directory, filename, selected objects, whether existing
-files may be replaced, and whether the viewer may use the Three.js CDN. Export
-only after those decisions are explicit.
+Confirm the absolute output directory, filename, selected objects, whether the
+viewer may use the Three.js CDN, background color, auto-rotation, and whether
+to embed the GLB. Export only after those decisions are explicit.
 
-```python
-import bpy
-import os
+Use `threejs_export`. It exports the current Blender selection only, refuses to
+overwrite an existing `<name>.glb` or `<name>.html`, and does not alter source
+materials. It produces:
 
-path = "/absolute/output/path/model.glb"
-if os.path.exists(path):
-    raise RuntimeError("Refusing to overwrite existing GLB without approval")
-selected = list(bpy.context.selected_objects)
-if not selected:
-    raise RuntimeError("Select one or more objects before exporting")
-bpy.ops.object.select_all(action="DESELECT")
-for obj in selected:
-    obj.select_set(True)
-bpy.ops.export_scene.gltf(filepath=path, export_format="GLB", use_selection=True, export_apply=True)
-result = {"glb": path}
-```
+- a GLB with meshes, materials, UVs, normals, and images;
+- a responsive, accessible standalone viewer with pinned Three.js,
+  `GLTFLoader`, and `OrbitControls`;
+- model-bound camera framing, neutral studio lights, reset, auto-rotate, and
+  transparent-background controls.
 
-Then create a standalone HTML viewer that imports Three.js, `GLTFLoader`, and
-`OrbitControls` from a pinned CDN release. Configure responsive canvas sizing,
-orbit controls, optional auto-rotation, a neutral environment, and a camera
-framed from the loaded model bounds. Do not embed the GLB unless the user asks.
+By default the viewer loads `./<name>.glb`; serve its output directory over
+HTTP (for example, `bunx serve .`). Set `embed: true` only when a self-contained
+HTML file outweighs its larger size. The viewer still loads Three.js from its
+pinned CDN.

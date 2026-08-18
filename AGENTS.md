@@ -8,7 +8,9 @@
   Blender and requires a JSON-serializable dictionary assigned to `result`.
 - The plugin exposes a native `blender` tool with a `code` argument and a
   `polyhaven` tool for first-party Poly Haven search, download, import, HDRI,
-  and PBR material workflows.
+  PBR material, studio, scene-building, and comparison-render workflows. It
+  also exposes `threejs_export` for selected-object GLB exports and standalone
+  Three.js viewer generation.
 - `skills/*/SKILL.md` contains adapted Blender workflow skills. They invoke
   the native `blender` tool and must preserve its `result` contract.
 

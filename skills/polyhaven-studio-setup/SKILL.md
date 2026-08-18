@@ -6,28 +6,12 @@ description: Set up Blender product lighting with a Poly Haven HDRI and optional
 # Poly Haven Studio Setup
 
 Query the current world first and obtain approval before replacing its
-environment. Then use `polyhaven` to search and apply an HDRI, followed by an
-optional Poly Haven texture on a new ground plane. Default to a `1k` HDRI for
-previews and `2k` for final renders. Confirm higher resolutions before
-downloading.
+environment. Then use `polyhaven` `action: "studio_setup"` with an HDRI asset
+ID, optional ground texture asset ID, resolution, `strength`, `rotation`, and
+`ground_size`. Default to a `1k` HDRI for previews and `2k` for final renders.
+Confirm higher resolutions before downloading.
 
-After applying the HDRI, set world strength and the environment rotation through
-a focused `blender` call:
-
-```python
-import bpy
-import math
-
-rotation_degrees = 0.0  # replace with the approved rotation
-world = bpy.context.scene.world
-background = world.node_tree.nodes.get("Background") if world and world.use_nodes else None
-environment = world.node_tree.nodes.get("OpenCode Poly Haven HDRI") if world and world.use_nodes else None
-if background:
-    background.inputs["Strength"].default_value = 1.0
-if environment:
-    environment.texture_mapping.rotation[2] = math.radians(rotation_degrees)
-result = {"world": world.name if world else None, "strength": 1.0, "rotation_degrees": rotation_degrees}
-```
-
-Do not alter the user's existing world, ground, or camera without confirmation.
+The tool applies HDRI strength and rotation using named world nodes, can create
+and texture a named ground plane, and switches open 3D viewports to rendered
+world lighting. It refuses to replace an existing OpenCode studio-ground object.
 Attribute the HDRI and textures to Poly Haven.

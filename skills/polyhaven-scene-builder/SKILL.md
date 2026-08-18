@@ -9,23 +9,14 @@ Use the native `polyhaven` tool—never the legacy port-9876 scripts. Credit
 Poly Haven in user-facing output. Begin by querying the product object and its
 bounds with `blender`.
 
-1. Use `polyhaven` with `action: "search"` to find an HDRI, texture, or model.
-2. Apply the selected HDRI with `action: "apply_hdri"`.
-3. For a ground plane or pedestal, create the mesh with `blender`, return its
-   name in `result`, then use `polyhaven` with `action: "apply_texture"`.
-4. Only add a prop when the user approves it; import it with
-   `action: "import_model"`.
+1. Use `polyhaven` with `action: "search"` to find an approved HDRI, texture,
+   or model.
+2. Use `action: "scene_builder"` with a `showroom`, `outdoor`, `minimal`, or
+   `dramatic` preset, or explicit `hdri` and optional `ground` asset IDs.
+3. Pass `pedestal: true` and the queried product `object` only when approved.
+   The tool sizes the pedestal from that exact mesh's world-space bounds.
+4. Supply approved comma-separated model IDs through `props`.
 
-Do not remove existing scene objects. A typical ground-plane call is:
-
-```python
-import bpy
-
-bpy.ops.mesh.primitive_plane_add(size=15, location=(0, 0, -0.01))
-ground = bpy.context.active_object
-ground.name = "OpenCode Ground"
-result = {"ground": ground.name}
-```
-
-Create a pedestal only after confirming its dimensions against the product
-bounds. Report every downloaded asset as sourced from Poly Haven.
+The tool creates named ground and pedestal objects without removing existing
+scene objects, configures the viewport for rendered world lighting, and reports
+every Poly Haven asset it uses.

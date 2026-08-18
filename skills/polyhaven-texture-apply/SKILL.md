@@ -12,8 +12,8 @@ Use `polyhaven` rather than a legacy Node script.
    concise material query.
 3. Confirm the selected asset and resolution. `1k` is a safe preview default;
    use `2k` for ordinary renders and obtain approval before `4k` or `8k`.
-4. Apply it with `action: "apply_texture"`, `asset`, `object`, and
-   `resolution`.
+4. Apply it with `action: "apply_texture"`, `asset`, `object`, `resolution`,
+   and optional Mapping-node `scale`.
 
 The native tool creates a Principled material with diffuse, roughness, and
 OpenGL normal maps when those files are available, replacing the target's first

@@ -10,7 +10,9 @@ Native OpenCode plugin and focused skill for Blender's local MCP extension.
 The Blender extension exposes a NUL-delimited TCP protocol rather than a
 standard HTTP MCP endpoint. This plugin adapts its `execute` operation into an
 OpenCode-native `blender` tool. It also provides a `polyhaven` tool for
-first-party asset search, download, import, HDRI, and PBR material workflows.
+first-party asset search, download, import, HDRI, PBR material, studio, and
+comparison-render workflows, plus `threejs_export` for GLB web exports and
+standalone Three.js viewers.
 
 ## Install Blender's MCP bridge
 
@@ -81,6 +83,13 @@ result = {
 
 Inspect scene state before mutations. Do not delete, reset, save, or render
 unless explicitly requested.
+
+`polyhaven` supports `search`, `apply_hdri`, `apply_texture`, `import_model`,
+`studio_setup`, `scene_builder`, `material_swap`, and `hdri_showcase`.
+Comparison actions require an absolute empty output directory, refuse to
+overwrite PNGs, and restore their temporary render/world or material state.
+`threejs_export` exports the current selection to GLB and creates a responsive
+viewer without overwriting existing output files.
 
 ## Included skills
 
