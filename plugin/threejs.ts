@@ -1,6 +1,6 @@
 import { mkdir, readFile, stat, unlink, writeFile } from "node:fs/promises"
 import { basename, isAbsolute, join, resolve } from "node:path"
-import { tool } from "@opencode-ai/plugin"
+import { tool } from "./tool"
 import { executeBlenderCode } from "./bridge"
 
 type ViewerOptions = {

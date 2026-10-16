@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, stat, unlink, writeFile } from "node:fs/promis
 import { homedir } from "node:os"
 import { basename, dirname, isAbsolute, join, resolve, sep } from "node:path"
 import { createHash, randomUUID } from "node:crypto"
-import { tool } from "@opencode-ai/plugin"
+import { tool } from "./tool"
 import { executeBlenderCode } from "./bridge"
 
 const apiBase = "https://api.polyhaven.com"
@@ -75,7 +75,7 @@ function resolutionKeys(branch: RecordValue, requested: string) {
     .sort((left, right) => Math.abs(Number.parseInt(left, 10) - requestedNumber) - Math.abs(Number.parseInt(right, 10) - requestedNumber))
 }
 
-function fileFor(files: RecordValue, mapName: string, requested: string, formats: string[]) {
+function fileFor(files: RecordValue, mapName: string, requested: string, formats: readonly string[]) {
   const map = files[mapName]
   if (!isRecord(map)) return undefined
   for (const resolution of resolutionKeys(map, requested)) {

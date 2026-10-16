@@ -2,6 +2,9 @@
 
 Native OpenCode plugin and focused skill for Blender's local MCP extension.
 
+Supports **OpenCode V2** through `@opencode/plugin`. V1 users can explicitly
+load `plugin/legacy.ts` instead; V1 implementation files do not run in V2.
+
 ## Generation environment
 
 - Blender 5.2.0 LTS
@@ -51,15 +54,38 @@ bun install --frozen-lockfile
 ```
 
 Register the absolute file URL in `~/.config/opencode/opencode.jsonc`. Merge
-this entry with any existing `plugin` array; do not replace other plugins:
+this entry with any existing V2 `plugins` array; do not replace other plugins:
 
 ```jsonc
 {
-  "plugin": [
+  "plugins": [
     "file:///absolute/path/to/opencode-blender/plugin/blender-mcp.ts"
   ]
 }
 ```
+
+Keep the entire `plugin/` directory together. The V2 entrypoint uses its sibling
+modules and the checkout's installed dependencies. If migrating from V1, rename
+the configuration key `plugin` to `plugins` and remove any duplicate legacy
+Blender registration. V1 users keep `plugin` and point it at `plugin/legacy.ts`.
+
+V2 returns native `{ content, title }` tool results and validates JSON Schema
+inputs, including defaults. The three focused inspection tools and Poly Haven
+`search` run read-only. Arbitrary Python, imports/materials/scene changes,
+renders, and exports require `blender.write` permission **before** executing.
+To request confirmation rather than allow writes by default, merge this rule
+into your existing V2 configuration:
+
+```jsonc
+{
+  "permission": { "blender.write": "ask" }
+}
+```
+
+Cancellation is checked before execution and after permission approval. Once a
+TCP request is sent, cancellation does not stop Python inside Blender. Inspect
+the scene after a timeout; never blindly retry a mutation. The V1 entrypoint
+retains its original behavior and does not add the V2 permission gate.
 
 ### 2. Install the skill
 
@@ -103,10 +129,12 @@ or `blender_object_info` before falling back to arbitrary Python.
 
 ```bash
 bun test
+bun run check
 ```
 
 The tests cover TCP framing and bridge configuration, standalone viewer
-generation, and Poly Haven's omitted-option handling. They do not require
+generation, Poly Haven's omitted-option handling, V2 registration, schema defaults,
+permission rejection and cancellation. They do not require
 Blender to be running.
 
 ## Included skills

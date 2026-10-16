@@ -3,9 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "1.18.10"
+    "@opencode/plugin": "2.0.31",
+    "zod": "^4"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "typescript": "5.9.3"
   }
 }

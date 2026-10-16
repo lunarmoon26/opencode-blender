@@ -19,15 +19,20 @@
 
 ## Setup and verification
 
-- Use Bun: `bun install`; run `bun test` for focused offline coverage.
+- Use Bun: `bun install`; run `bun test` and `bun run check` for offline coverage.
+- `plugin/blender-mcp.ts` is the V2 `Plugin.define` entrypoint; `plugin/legacy.ts`
+  retains the V1 tool map. Shared schemas/defaults live in `plugin/tool.ts`.
+- V2 writes require `blender.write` permission before any side effects. Only the
+  three focused inspection tools and Poly Haven search bypass that write gate.
 - Blender must be running with its MCP extension enabled. Smoke-test the bridge:
 
   ```bash
-  bun -e 'import plugin from "./plugin/blender-mcp.ts"; const hooks = await plugin({}); const result = await hooks.tool.blender.execute({ code: "import bpy\nresult = {\"version\": bpy.app.version_string}" }, { metadata() {} }); console.log(result.title)'
+  bun -e 'import { executeBlenderCode } from "./plugin/bridge.ts"; console.log(await executeBlenderCode("import bpy\nresult = {\"version\": bpy.app.version_string}"))'
   ```
 
 - Register `file:///absolute/path/to/opencode-blender/plugin/blender-mcp.ts`
-  in OpenCode's global `plugin` configuration, then restart OpenCode.
+  in OpenCode V2's global `plugins` configuration, then restart OpenCode.
+  Keep sibling modules together; do not register the legacy entrypoint in V2.
 
 ## Blender workflow
 

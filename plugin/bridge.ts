@@ -44,6 +44,7 @@ export function executeBlenderCode(code: string, bridge: BlenderBridge = blender
       socket.write(JSON.stringify({ type: "execute", code, strict_json: true }) + "\0")
     })
     socket.on("data", (chunk) => {
+      if (typeof chunk === "string") chunk = Buffer.from(chunk)
       if (responseBuffer.length + chunk.length > maxResponseBytes) {
         fail(new Error(`Blender MCP bridge response exceeds ${maxResponseBytes} bytes`))
         return
